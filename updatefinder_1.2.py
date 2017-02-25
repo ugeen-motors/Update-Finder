@@ -2,21 +2,92 @@ import time
 import os
 import re
 import sys
-from PyQt5.QtWidgets import (QPushButton, QWidget, QLineEdit, QApplication)
+from PyQt5.QtWidgets import (QWidget, QMainWindow, QTextEdit,
+    QAction, QFileDialog, QApplication, QPushButton, QLineEdit)
 
 # Define source folder
 
-print("")
-print("UPDATE FINDER 1.2")
-print("")
-print("================================================================================")
-print('WARNING: Put sign " before and after directory path and use forward slash /')
-print("================================================================================")
-rar_path = str(input("Enter path to the directory with WinRAR.exe: "))
-source_folder = str(input("Input the path of Directory with unzipped drivers: "))
-dstdir = str(input("Input the path of Directory where will be located Archives with updates: "))
+class Example(QMainWindow):
 
-# Define a Period with updates
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+
+    def initUI(self):
+
+# Button and field Source Directory
+        self.btn1 = QPushButton('Source Directory', self)
+        self.btn1.move(20, 20)
+        self.btn1.clicked.connect(self.getSourcePath)
+        self.source_folder = ''
+
+        self.source_dir_txt = QLineEdit(self)
+        self.source_dir_txt.move(130, 22)
+        self.source_dir_txt.setGeometry(130, 22, 500, 25)
+
+# Button and field Result Directory
+        self.btn2 = QPushButton('Results Directory', self)
+        self.btn2.move(20, 60)
+        self.btn2.clicked.connect(self.getResultPath)
+        self.dstdir = ''
+
+        self.result_dir_txt = QLineEdit(self)
+        self.result_dir_txt.move(130, 22)
+        self.result_dir_txt.setGeometry(130, 62, 500, 25)
+
+# Period
+
+        self.start_year = QLineEdit(self)
+        self.start_year.move(130, 22)
+        self.start_year.setGeometry(130, 102, 500, 25)
+
+        self.start_month = QLineEdit(self)
+        self.start_month.move(130, 22)
+        self.start_month.setGeometry(130, 62, 500, 25)
+
+
+        self.end_year = QLineEdit(self)
+        self.end_year.move(130, 22)
+        self.end_year.setGeometry(130, 62, 500, 25)
+
+        self.end_month = QLineEdit(self)
+        self.end_month.move(130, 22)
+        self.end_month.setGeometry(130, 62, 500, 25)
+
+
+# Button Run
+        self.btn3 = QPushButton('Run', self)
+        self.btn3.move(20, 100)
+        self.btn3.clicked.connect(self.runButton)
+
+        openFile = QAction('Open', self)
+        openFile.setShortcut('Ctrl+O')
+        openFile.setStatusTip('Open new File')
+        openFile.triggered.connect(self.getSourcePath)
+
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(openFile)
+
+        self.setGeometry(300, 300, 750, 300)
+        self.setWindowTitle('Update Finder 2.0')
+        self.show()
+
+
+    def getSourcePath(self):
+        fname = QFileDialog.getExistingDirectory(self, 'Open file', '')
+        self.source_dir_txt.setText(str(fname))
+        self.source_folder = str(fname)
+
+    def getResultPath(self):
+        fname = QFileDialog.getExistingDirectory(self, 'Open file', '')
+        self.result_dir_txt.setText(str(fname))
+
+'''
+    def runButton(self):
+
+
 start_year = int(input("Enter period start Year (yyyy): "))
 start_month = int(input("Enter period start Month (m): "))
 print("=================================================================================")
@@ -75,3 +146,11 @@ for i in updated_folders:
         print('RAR creating is FAILED')
 
 print ("PROCESS FINISHED")
+
+'''
+
+if __name__ == '__main__':
+
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
